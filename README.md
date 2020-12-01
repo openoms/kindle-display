@@ -64,38 +64,58 @@ Once everything works, deploy the server app and setup a cronjob to trigger the 
 
 ### Prerequisites
 
+
+
+1. Jailbreak   
 You need to
 [jailbreak your Kindle](https://wiki.mobileread.com/wiki/Kindle4NTHacking#Jailbreak) using the packages from the
 [mobileread forum](https://www.mobileread.com/forums/showthread.php?t=225030).
 
-I installed these according to the info in their particular READMEs:
+    1. Plug in the Kindle and copy the data.tar.gz & ENABLE_DIAGS files plus the diagnostic_logs folders to the Kindle's USB drive's root  
+    2. Safely remove the USB cable and restart the Kindle (Menu -> Settings -> Menu -> Restart)  
+    3. Once the device restarts into diagnostics mode, select "D) Exit, Reboot or Disable Diags" (using the 5-way keypad)  
+    4. Select "R) Reboot System" and "Q) To continue" (following on-screen instructions, when it tells you to use 'FW Left' to select an option, it means left on the 5-way keypad)  
+    5. Wait about 20 seconds: you should see the Jailbreak screen for a while, and the device should then restart normally  
+    6. After the Kindle restarts, you should see a new book titled "You are Jailbroken", if you see this, the jailbreak has been successful.   
 
-1. Jailbreak
-2. USBNetwork
-3. MKK
-4. KUAL
+
+2. Next copy the content of the following packages to the Kindle one-by-one and open `Settings` -> `Update Your Kindle`
+
+   1. USBNetwork
+   2. MKK
+   3. KUAL
 
 ### Installation
 
+#### Activate the `~usbNetwork`
+see the [notes below](#Notes-regarding-USB-Network)
+#### Connect your Kindle via usb and ssh into it  
 ```bash
-# Connect your Kindle via usb and ssh into it
 ssh root@kindle
+```
 
+#### Short method
+Open the raw [paste-to-install.sh](kindle/paste-to-install.sh) 
+and paste it to the kindle terminal.
+If the picture appeared on the Kindle the config is done.
+
+#### Manual steps
+```bash
 # Make the Kindle file system writable
 mntroot rw
 
 # Create the mnt/base-us scripts according to the files in the kindle directory
-vi /mnt/base-us/RUNME.sh
+nano /mnt/base-us/RUNME.sh
 
 # Set the BASE according to your local network setup to address the server
-vi /mnt/base-us/update.sh
+nano /mnt/base-us/update.sh
 
 # Create a cronjob to run the update script in regular intervals
 #
 # For instance:
 # */5 6-22 * * * /mnt/us/update.sh
 # 0 23,0,5 * * * /mnt/us/update.sh
-vi /etc/crontab/root
+nano /etc/crontab/root
 
 # Execute the init script and trigger an the first render
 sh /mnt/base-us/RUNME.sh
@@ -104,7 +124,7 @@ sh /mnt/base-us/RUNME.sh
 #### Notes regarding USB Network
 
 Some hints via
-[openoms](https://gist.github.com/openoms/56979d0859d7063cb734bdacabf1068f)) and
+[openoms](https://gist.github.com/openoms/56979d0859d7063cb734bdacabf1068f) and
 [grnqrtr](https://github.com/rootzoll/raspiblitz/pull/1301#issuecomment-655840707), also see the
 [mobileread forum](https://www.mobileread.com/forums/showthread.php?t=204942).
 
